@@ -2,12 +2,12 @@ package com.example.employeemanagement.service;
 
 import com.example.employeemanagement.dto.CreateEmployeeRequest;
 import com.example.employeemanagement.dto.EmployeeResponse;
+import com.example.employeemanagement.exception.EmployeeNotFoundException;
 import com.example.employeemanagement.model.Department;
 import com.example.employeemanagement.model.Employee;
 import com.example.employeemanagement.repository.DepartmentRepository;
 import com.example.employeemanagement.repository.EmployeeRepository;
 import java.util.List;
-import java.util.Optional;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -39,8 +39,10 @@ public class EmployeeService {
         return employees.stream().map(EmployeeResponse::from).toList();
     }
 
-    public Optional<EmployeeResponse> getEmployeeById(Long id) {
-        return employeeRepository.findById(id).map(EmployeeResponse::from);
+    public EmployeeResponse getEmployeeById(Long id) {
+        Employee employee = employeeRepository.findById(id)
+                .orElseThrow(() -> new EmployeeNotFoundException(id));
+        return EmployeeResponse.from(employee);
     }
 
     public List<EmployeeResponse> searchEmployees(String keyword) {
@@ -53,7 +55,7 @@ public class EmployeeService {
 
     public EmployeeResponse createEmployee(CreateEmployeeRequest request) {
         Department department = departmentRepository.findById(request.departmentId())
-                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Department not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.BAD_REQUEST, "Không tìm thấy phòng ban với id " + request.departmentId()));
 
         String fullName = utilityService.formatFullName(request.firstName(), request.lastName());
         String employeeCode = utilityService.generateEmployeeCode(request.firstName(), request.lastName());
