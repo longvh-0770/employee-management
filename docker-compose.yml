@@ -1,0 +1,15 @@
+services:
+  postgres:
+    image: postgres:16-alpine
+    container_name: employee-management-db
+    environment:
+      POSTGRES_DB: employee_management
+      POSTGRES_USER: employee_management
+      POSTGRES_PASSWORD: employee_management
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+volumes:
+  pgdata:

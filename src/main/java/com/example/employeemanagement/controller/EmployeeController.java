@@ -36,6 +36,11 @@ public class EmployeeController {
                 .orElseGet(() -> ResponseEntity.notFound().build());
     }
 
+    @GetMapping("/search")
+    public ResponseEntity<List<EmployeeResponse>> searchEmployees(@RequestParam String keyword) {
+        return ResponseEntity.ok(employeeService.searchEmployees(keyword));
+    }
+
     @PostMapping
     public ResponseEntity<EmployeeResponse> createEmployee(@RequestBody CreateEmployeeRequest request) {
         EmployeeResponse created = employeeService.createEmployee(request);

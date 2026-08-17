@@ -7,15 +7,17 @@ public record EmployeeResponse(
         String employeeCode,
         String fullName,
         String email,
-        String department) {
+        Long departmentId,
+        String departmentName) {
 
     public static EmployeeResponse from(Employee employee) {
         return new EmployeeResponse(
-                employee.id(),
-                employee.employeeCode(),
-                employee.fullName(),
-                employee.email(),
-                employee.department());
+                employee.getId(),
+                employee.getEmployeeCode(),
+                employee.getFullName(),
+                employee.getEmail(),
+                employee.getDepartment() == null ? null : employee.getDepartment().getId(),
+                employee.getDepartment() == null ? null : employee.getDepartment().getName());
     }
 
 }

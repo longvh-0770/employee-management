@@ -2,37 +2,13 @@ package com.example.employeemanagement.repository;
 
 import com.example.employeemanagement.model.Employee;
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.atomic.AtomicLong;
-import org.springframework.stereotype.Repository;
+import org.springframework.data.jpa.repository.JpaRepository;
 
-@Repository
-public class EmployeeRepository {
+public interface EmployeeRepository extends JpaRepository<Employee, Long> {
 
-    private final Map<Long, Employee> store = new ConcurrentHashMap<>();
-    private final AtomicLong idSequence = new AtomicLong(1);
+    List<Employee> findByDepartment_NameContainingIgnoreCase(String department);
 
-    public List<Employee> findAll() {
-        return List.copyOf(store.values());
-    }
-
-    public Optional<Employee> findById(Long id) {
-        return Optional.ofNullable(store.get(id));
-    }
-
-    public Employee save(Employee employee) {
-        long id = idSequence.getAndIncrement();
-        Employee saved = new Employee(
-                id,
-                employee.employeeCode(),
-                employee.fullName(),
-                employee.email(),
-                employee.department(),
-                employee.encodedPassword());
-        store.put(id, saved);
-        return saved;
-    }
+    List<Employee> findByFullNameContainingIgnoreCaseOrDepartment_NameContainingIgnoreCase(
+            String fullNameKeyword, String departmentKeyword);
 
 }
