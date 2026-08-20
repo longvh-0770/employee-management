@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8" />
+    <title>Danh sách nhân viên</title>
+</head>
+<body>
+<h1>Danh sách nhân viên</h1>
+
+<form th:action="@{/employees/list}" method="get">
+    <input type="text" name="keyword" th:value="${keyword}" placeholder="Tìm theo tên hoặc phòng ban" />
+    <button type="submit">Tìm kiếm</button>
+</form>
+
+<p><a th:href="@{/employees/add}">Thêm nhân viên mới</a></p>
+
+<table border="1" cellpadding="6">
+    <thead>
+    <tr>
+        <th>ID</th>
+        <th>Mã NV</th>
+        <th>Họ tên</th>
+        <th>Email</th>
+        <th>Phòng ban</th>
+    </tr>
+    </thead>
+    <tbody>
+    <tr th:each="employee : ${employees}">
+        <td th:text="${employee.id}"></td>
+        <td th:text="${employee.employeeCode}"></td>
+        <td th:text="${employee.fullName}"></td>
+        <td th:text="${employee.email}"></td>
+        <td th:text="${employee.departmentName}"></td>
+    </tr>
+    <tr th:if="${employees.isEmpty()}">
+        <td colspan="5">Không có nhân viên nào</td>
+    </tr>
+    </tbody>
+</table>
+</body>
+</html>
