@@ -11,6 +11,7 @@ import com.example.employeemanagement.repository.EmployeeRepository;
 import java.util.List;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -90,6 +91,12 @@ public class EmployeeService {
                 .orElseThrow(() -> new EmployeeNotFoundException(id));
         employeeRepository.delete(employee);
         log.info("Đã xóa nhân viên: id={}, employeeCode={}", employee.getId(), employee.getEmployeeCode());
+    }
+
+    @Cacheable("employeeCountReport")
+    public long getEmployeeCountReport() {
+        log.info("Tính tổng số nhân viên từ DB (cache miss)");
+        return employeeRepository.count();
     }
 
     private Department findDepartmentOrThrow(Long departmentId) {
